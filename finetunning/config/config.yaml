@@ -1,0 +1,106 @@
+# config.yaml
+
+# ==== basic ====
+seed: 42
+num_workers: 4
+batch_size: 16
+n_fold: 5
+device: cuda
+save_dir: ./checkpoints
+data_dir: ./dataset/runs_CV
+exp_name: AbLWR_CV_Fold0
+
+
+
+
+# === dataset ===
+dataset:
+  follow_batch:
+    - x_b
+    - x_g
+  exclude_keys:
+    - metadata
+    - y
+    - y_b
+    - y_g
+    - edge_index_bg
+
+
+# === trainer ===
+trainer:
+  max_epochs: 50
+  check_val_every_n_epoch: 1
+  gradient_clip_val: 1.0
+  gradient_clip_algorithm: norm
+  accumulate_grad_batches: 8
+
+
+# === optimization ===
+optimizer:
+  name: adamw
+  lr: 0.001
+  weight_decay: 0.05
+
+
+# === initialization ===
+model_init:
+  method: PUL
+  pretrained_model_ckpt: pretraining/experiment/AbAg_PUL_ep400_wp20_rho0.95~0.8_coTrue_knnTrue10_sd_42/best_epoch170.pt
+
+
+# === callbacks ===
+callbacks:
+  early_stopping:
+    monitor: val/full_rank_acc
+    mode: max
+    patience: 10
+    min_delta: 0.001
+  model_checkpoint:
+    monitor: val/full_rank_acc
+    mode: max
+    save_top_k: 2
+
+
+# === network ===
+encoder:
+  ab:
+    node_feat_name: x_b
+    edge_index_name: edge_index_b
+    input_dim: 512
+    input_act: relu
+    dim_list:
+      - 128
+      - 64
+    act_list:
+      - relu
+    gcn_kwargs:
+      normalize: true
+  ag:
+    node_feat_name: x_g
+    edge_index_name: edge_index_g
+    input_dim: 1280
+    input_act: relu
+    dim_list:
+      - 128
+      - 64
+    act_list:
+      - relu
+    gcn_kwargs:
+      normalize: true
+
+regression:
+  hidden_units: 256
+  embed_size: 128
+  dropout_rate: 0.01
+  num_blocks: 4
+  num_heads: 16
+  num_induced: 20
+
+
+# === loss function ===
+loss_fun:
+  ListMLE:
+    use_listwise: true
+    use_pos_weight_norm: true
+    list_weight: 1.0
+    tie_noise_std: 0.0001

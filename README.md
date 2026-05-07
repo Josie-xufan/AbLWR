@@ -43,6 +43,26 @@ This tool is supported for Linux. The tool has been tested on the following syst
 
 <!-- 3. Install guide =========================================================================================================== -->
 # Install guide (training from scratch)
+## Step0 - Download
+Due to GitHub's file size limits, the large dataset and model checkpoints required for this project are hosted securely on **Zenodo**.
+
+You can access and download all necessary files here:
+[(https://doi.org/10.5281/zenodo.20069587)](https://doi.org/10.5281/zenodo.20069587)
+
+1. Visit the Zenodo link above and download the required files (e.g., `dataset.zip` and `checkpoints.zip`).
+2. Extract the downloaded `.zip` files.
+3. Place the extracted folders directly into the root directory of this project.
+
+Once extracted, your project structure should look like this:
+
+```text
+AbLWR/
+├── dataset/          # Extracted dataset files
+├── checkpoints/      # Extracted model weights
+├── README.md
+└── ... (other code files)
+```
+
 ## Step1 - Configure the enviroment (for Conda Users).
 ```
 git clone https://github.com/Josie-xufan/AbLWR.git 
